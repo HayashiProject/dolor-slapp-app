@@ -32,19 +32,21 @@ I will respond to the following messages:
 // Setup commands handlers
 //*********************************************
 
-slapp.command('/dolor', /^in/, (msg) => {
+slapp.command('/dolor', /^in/, (msg, text) => {
   // `respond` is used for actions or commands and uses the `response_url` provided by the
   // incoming request from Slack
-  console.log('[dolor in]. msg:', msg)
-  msg.respond(`Glad you are in ${match}!`)
+  // console.log('[dolor in]. msg:', msg)
+  // msg.respond(`Glad you are in ${match}!`)
+  msg.respond(`Glad you are in [${text}].`)
 })
 
 slapp.command('/dolor', 'create (.*)', (msg, text, question) => {
   // if "/inorout create Who is in?" is received:
   // text = create Who is in?
   // question = Who is in?
-  console.log('[dolor create]. msg:', msg, 'text:', text, 'question:', question)
-  msg.response('Create something?')
+  // console.log('[dolor create]. msg:', msg, 'text:', text, 'question:', question)
+  // msg.response('Create something?')
+  msg.say('Create something??')
 })
 
 // slapp.command('/dolor', 'create (.*)', (msg, text, question) => {

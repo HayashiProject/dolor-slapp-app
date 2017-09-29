@@ -17,7 +17,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-16'
+const VERSION = 'dolor-17'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -81,7 +81,7 @@ slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
 })
 
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
-  let args = match.split(' +')
+  let args = match.split("\\s+")
   let depositAddress = args[0]
   let assetBalance = parseFloat(args[1])
   let assetName = args[2]

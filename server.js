@@ -38,7 +38,6 @@ slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
   /**
    * msg.response() will create response that's only visible to the requestee.
    */
-  msg.respond(`Glad you are in [${text}].`)
   msg.respond([
     "Be happy :smile:",
     'You the best',
@@ -63,6 +62,16 @@ slapp.command(COMMAND_HANDLER, 'go (.*)', (msg, text, match, arg4) => {
   console.log('arg4:', arg4)
   msg.say(`You want to go [${match}].`)
 })
+
+/**
+ * Catch all
+ */
+slapp.command(COMMAND_HANDLER, '(.*)', (msg, text, match) => {
+  console.log('text:', text)
+  console.log('match:', match)
+  msg.say(`You submitted: [${match}].`)
+})
+
 
 //
 

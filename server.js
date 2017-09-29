@@ -32,7 +32,42 @@ I will respond to the following messages:
 // Setup commands handlers
 //*********************************************
 
-slapp.command('/dolor', /^in/, (msg, text) => {
+const COMMAND_HANDLER = '/dolor'
+
+slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
+  /**
+   * msg.response() will create response that's only visible to the requestee.
+   */
+  msg.respond(`Glad you are in [${text}].`)
+  msg.respond([
+    "Be happy :smile:",
+    'You the best',
+    ':+1: go on!',
+    'Anytime :sun_with_face: is good time :full_moon_with_face:'
+  ])
+})
+
+slapp.command(COMMAND_HANDLER, /^get/, (msg, text, match, arg4) => {
+  console.log('text:', text)
+  console.log('match:', match)
+  console.log('arg4:', arg4)
+  /**
+   * msg.say() will create normal 'bot_message' visible by everyone in the channel.
+   */
+  msg.say(`You want to get [${match}].`)
+})
+
+slapp.command(COMMAND_HANDLER, 'go (.*)', (msg, text, match, arg4) => {
+  console.log('text:', text)
+  console.log('match:', match)
+  console.log('arg4:', arg4)
+  msg.say(`You want to go [${match}].`)
+})
+
+//
+
+
+slapp.command(COMMAND_HANDLER, /^in/, (msg, text, match) => {
   // `respond` is used for actions or commands and uses the `response_url` provided by the
   // incoming request from Slack
   // console.log('[dolor in]. msg:', msg)
@@ -40,7 +75,7 @@ slapp.command('/dolor', /^in/, (msg, text) => {
   msg.respond(`Glad you are in [${text}].`)
 })
 
-slapp.command('/dolor', 'create (.*)', (msg, text, question) => {
+slapp.command(COMMAND_HANDLER, 'create (.*)', (msg, text, question) => {
   // if "/inorout create Who is in?" is received:
   // text = create Who is in?
   // question = Who is in?

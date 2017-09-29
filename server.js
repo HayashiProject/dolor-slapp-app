@@ -23,7 +23,24 @@ I will respond to the following messages:
 \`thanks\` - to demonstrate a simple response.
 \`<type-any-other-text>\` - to demonstrate a random emoticon response, some of the time :wink:.
 \`attachment\` - to see a Slack attachment message.
+(beep boop!)
 `
+
+
+
+//*********************************************
+// Setup commands handlers
+//*********************************************
+
+slapp.command('/dolor', 'create (.*)', (msg, text, question) => {
+  msg.response(`You said create something: [${text}]. question: [${question}]`)
+})
+
+slapp.command('/dolor', '(.*)', (msg) => {
+  msg.response('I know you are saying something, but Im not sure what to do...')
+})
+
+
 
 //*********************************************
 // Setup different handlers for messages

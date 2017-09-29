@@ -61,6 +61,10 @@ slapp.command('/dolor', 'create (.*)', (msg, text, question) => {
 // Setup different handlers for messages
 //*********************************************
 
+slapp.message('foobar', ['mention', 'direct_message'], (msg) => {
+  msg.say('FOOBAR! FOO BAR!!')
+})
+
 // response to the user typing "help"
 slapp.message('help', ['mention', 'direct_message'], (msg) => {
   msg.say(HELP_TEXT)
@@ -154,5 +158,5 @@ server.listen(port, (err) => {
     return console.error(err)
   }
 
-  console.log(`Listening on port ${port}`)
+  console.log(`Listening on port [${port}] (beep boop)`)
 })

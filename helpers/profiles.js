@@ -1,4 +1,8 @@
 const Profiles = {
+    Blockchains: {
+        CityOfZion: 'http://api.wallet.cityofzion.io',
+        CityOfZionTestNet: 'http://testnet-api.wallet.cityofzion.io',
+    },
     Wallets: {
         WalletPiccolo: {
             Address: 'TBA',

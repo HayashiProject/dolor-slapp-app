@@ -8,12 +8,14 @@
  * - Check TX status
  * - Check blockchain height
  * - Fallback message when DM or mention this bot (to tell user to use command instead)
+ * - Load bot version value from package.json
  */
 'use strict'
 
 const express = require('express')
 const SlappHelper = require('./helpers/slapp-helper')
 const Profiles = require('./helpers/profiles')
+const Neon = require('neon-js')
 
 // -- Arrange
 
@@ -56,8 +58,13 @@ slapp.command(COMMAND_HANDLER, 'help', (msg) => {
 })
 
 slapp.command(COMMAND_HANDLER, 'height', (msg) => {
-  msg.say('So you want to find out the height of the blockchain...')
-    .say("Let's see (not implemened).")
+  // msg.say('So you want to find out the height of the blockchain...')
+  //   .say("Let's see (not implemened).")
+  console.log(Neon)
+  Neon.getWalletDBHeight(Profiles.Blockchains.CityOfZionTestNet)
+    .then(function(height) {
+      msg.say(`Block height: \`${height}\``)
+    })
 })
 
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {

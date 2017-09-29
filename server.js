@@ -38,6 +38,10 @@ slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
   /**
    * msg.response() will create response that's only visible to the requestee.
    */
+  /**
+   * msg.response() doesn't take array as it will just response with entire array.
+   * Have to use msg.say() for random sentence usage.
+   */
   msg.respond([
     "Be happy :smile:",
     'You the best',

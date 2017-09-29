@@ -5,8 +5,8 @@ const Profiles = {
     },
     Wallets: {
         WalletPiccolo: {
-            Address: 'TBA',
-            Secret: 'TBA',
+            Address: 'AVUfegS354LWRoBuCzuKjGCYkT3tnpFFTD',
+            Secret: 'L3QKsExhzK7VXVeEKidZuJgsXLHVoTTNRRU9mQVdnwRkpRhbXG38',
         },
     },
     Assets: {

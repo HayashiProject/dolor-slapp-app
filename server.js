@@ -6,8 +6,6 @@
  * - Diagnose neon-js health
  * - Transfer balance with "send [address] [neo amount] [gas amount]"
  * - Check TX status
- * - Check blockchain height
- * - Fallback message when DM or mention this bot (to tell user to use command instead)
  * - Load bot version value from package.json
  */
 'use strict'
@@ -19,13 +17,17 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-13'
+const VERSION = 'dolor-15'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
 \`help\` - to see this message.
 \`version\` - to see version of this Slack bot.
 \`random\` - to output a random sentence, for fun.
+\`height\` - to output current blockchain height.
+\`wallet\` - to output this bot's wallet information.
+\`send <address> <quantity> <asset-name>\` - to make a transfer from bot's account.
+\`send help\` - to see help more help message on how to use 'send' command.
 `
 let port = SlappHelper.GetPort()
 let slapp = SlappHelper.CreateSlapp()
@@ -65,6 +67,20 @@ slapp.command(COMMAND_HANDLER, 'height', (msg) => {
     .then(function(height) {
       msg.say(`Block height: \`${height}\``)
     })
+})
+
+slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
+  let blockchain = Profiles.Blockchains.CityOfZionTestNet;
+  let address = Profiles.Wallets.WalletPiccolo.Address;
+  Neon.getBalance(blockchain, address)
+    .then(function(balanceObj) {
+      msg.say(`Address: \`${address}\` Balance: \`${balanceObj.Neo.toString()} NEO\` and \`${balanceObj.Gas.toString()} GAS\` `)
+    })
+})
+
+slapp.command(COMMAND_HANDLER, 'send help', (msg) => {
+  //TODO: list available fund
+  msg.say(`Message on how to use \`send\` command... (TBA)`)
 })
 
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {

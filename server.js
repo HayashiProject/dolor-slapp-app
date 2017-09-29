@@ -1,14 +1,26 @@
+/**
+ * Dolor Slack Bot
+ * 
+ * TODO:
+ * - Better cater imprecise command input (additional space, case sensitivity, alternate command etc)
+ * - Diagnose neon-js health
+ * - Transfer balance with "send [address] [neo amount] [gas amount]"
+ * - Check TX status
+ * - Check blockchain height
+ * - Fallback message when DM or mention this bot (to tell user to use command instead)
+ */
 'use strict'
 
 const express = require('express')
 const SlappHelper = require('./helpers/slapp-helper')
+const Profiles = require('./helpers/profiles')
 
 // -- Arrange
 
 const VERSION = 'dolor-11'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
-I will respond to the following messages:
+I will respond to the following commands:
 \`help\` - to see this message.
 \`version\` - to see version of this Slack bot.
 \`random\` - to output a random sentence, for fun.
@@ -23,7 +35,7 @@ let slapp = SlappHelper.CreateSlapp()
 //*********************************************
 
 slapp.command(COMMAND_HANDLER, 'version', (msg) => {
-  msg.say(`Version [${VERSION}]`)
+  msg.say(`Version \`${VERSION}\``)
 })
 
 slapp.command(COMMAND_HANDLER, 'random', (msg) => {
@@ -43,13 +55,31 @@ slapp.command(COMMAND_HANDLER, 'help', (msg) => {
   msg.say(HELP_TEXT)
 })
 
+slapp.command(COMMAND_HANDLER, 'height', (msg) => {
+  msg.say('So you want to find out the height of the blockchain...')
+    .say("Let's see (not implemened).")
+})
+
+slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
+  msg.say('So you want to make a transaction...')
+    .say(`text: \`${text}\``)
+    .say(`match: \`${match}\``)
+})
+
 /**
- * Catch all
+ * Catch all command
  */
 slapp.command(COMMAND_HANDLER, '(.*)', (msg, text, match) => {
   // console.log('text:', text)
   // console.log('match:', match)
   msg.say(`Unknown command: [${match}].`)
+})
+
+/**
+ * Catch all message
+ */
+slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
+  msg.say(`Don't message me directly. Use \`/dolor help\` to see list of available commands.`)
 })
 
 
@@ -189,14 +219,6 @@ slapp.command(COMMAND_HANDLER, '(.*)', (msg, text, match) => {
 //       color: '#7CD197'
 //     }]
 //   })
-// })
-
-// // Catch-all for any other responses not handled above
-// slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
-//   // respond only 40% of the time
-//   if (Math.random() < 0.4) {
-//     msg.say([':wave:', ':pray:', ':raised_hands:'])
-//   }
 // })
 
 

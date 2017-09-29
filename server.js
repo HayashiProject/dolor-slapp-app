@@ -17,7 +17,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-15'
+const VERSION = 'dolor-16'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -26,8 +26,10 @@ I will respond to the following commands:
 \`random\` - to output a random sentence, for fun.
 \`height\` - to output current blockchain height.
 \`wallet\` - to output this bot's wallet information.
-\`send <address> <quantity> <asset-name>\` - to make a transfer from bot's account.
-\`send help\` - to see help more help message on how to use 'send' command.
+\`send <address> <quantity> <asset-name>\` - to make a transfer from bot's account. 'asset name' can be either 'Neo' or 'Gas', case sensitive.
+Examples:
+  \`send AVUfegS354LWRoBuCzuKjGCYkT3tnpFFTD 10 Neo\`
+  \`send AVUfegS354LWRoBuCzuKjGCYkT3tnpFFTD 7.6 Gas\`
 `
 let port = SlappHelper.GetPort()
 let slapp = SlappHelper.CreateSlapp()
@@ -78,15 +80,17 @@ slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
     })
 })
 
-slapp.command(COMMAND_HANDLER, 'send help', (msg) => {
-  //TODO: list available fund
-  msg.say(`Message on how to use \`send\` command... (TBA)`)
-})
-
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
+  let args = match.split(' +')
+  let depositAddress = args[0]
+  let assetBalance = parseFloat(args[1])
+  let assetName = args[2]
+
   msg.say('So you want to make a transaction...')
     .say(`text: \`${text}\``)
     .say(`match: \`${match}\``)
+    .say(`args: \`${args}\``)
+    .say(`depositAddress: \`${depositAddress}\`, assetBalance: \`${assetBalance}\`, assetName: \`${assetName}\``)
 })
 
 /**

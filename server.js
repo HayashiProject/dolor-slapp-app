@@ -1,19 +1,20 @@
 'use strict'
 
 const express = require('express')
-const SlappHelper = require('./lib/slapp-helper')
+const SlappHelper = require('./helpers/slapp-helper')
 
 // -- Arrange
 
-let port = SlappHelper.GetPort()
-let slapp = SlappHelper.CreateSlapp()
-const version = 'dolor-10'
+const VERSION = 'dolor-11'
+const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following messages:
 \`help\` - to see this message.
 \`version\` - to see version of this Slack bot.
 \`random\` - to output a random sentence, for fun.
 `
+let port = SlappHelper.GetPort()
+let slapp = SlappHelper.CreateSlapp()
 
 
 
@@ -21,10 +22,8 @@ I will respond to the following messages:
 // Setup commands handlers
 //*********************************************
 
-const COMMAND_HANDLER = '/dolor'
-
 slapp.command(COMMAND_HANDLER, 'version', (msg) => {
-  msg.say(`Version [${version}]`)
+  msg.say(`Version [${VERSION}]`)
 })
 
 slapp.command(COMMAND_HANDLER, 'random', (msg) => {

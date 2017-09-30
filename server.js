@@ -8,11 +8,8 @@
  * - Load bot version value from package.json
  * 
  * MORE TODO:
- * - Redo README.md
- * - Review bot.yml
  * - Formalise this project/bot name
  * - Formalise avatar image
- * - Uniform coding style/format
  * 
  * QUESTIONS FOR COMMUNITY:
  * - Is it preferrable to use command or use mention?
@@ -20,6 +17,7 @@
  */
 'use strict'
 
+const fs = require('fs')
 const express = require('express')
 const SlappHelper = require('./utils/slapp-helper')
 const Profiles = require('./utils/profiles')
@@ -27,7 +25,8 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-25'
+// const VERSION = 'dolor-26'
+const VERSION = JSON.parse(fs.readFileSync('./package.json')).version
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:

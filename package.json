@@ -1,21 +1,12 @@
 {
-  "name": "starter-slapp-app",
-  "version": "1.0.0",
-  "description": "Basic Slack app using the Slapp library and Slack Events API",
+  "name": "neo-testnet-slapp-app",
+  "version": "1.0.26",
+  "description": "Slack bot uses library and interacts with NEO Testnet blockchain.",
   "scripts": {
     "watch": "nodemon server.js",
     "test": "standard"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BeepBoopHQ/starter-slapp-app.git"
-  },
-  "author": "Brad Harris",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/BeepBoopHQ/starter-slapp-app/issues"
-  },
-  "homepage": "https://github.com/BeepBoopHQ/starter-slapp-app#readme",
   "dependencies": {
     "buffer": "^5.0.7",
     "express": "^4.14.0",

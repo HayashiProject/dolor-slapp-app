@@ -17,7 +17,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-19'
+const VERSION = 'dolor-20'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -89,24 +89,37 @@ slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
 })
 
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
-  let args = match.split("\\s+")
+  let args = match.trim().split(/\s+/)
   console.log('args:', args)
   let depositAddress = args[0]
-  let assetBalance = parseFloat(args[1])
+  let assetAmount = parseFloat(args[1])
   let assetName = args[2]
 
-  let argsB = match.split(' ')
-  console.log('argsB:', argsB)
-  let argsC = match.split(' +')
-  console.log('argsC:', argsC)
-  let argsD = match.split(/\s+/)
-  console.log('argsD:', argsD)
+  // Validation and sanitization
+  if (/^([a-zA-Z0-9]){34}$/.test(depositAddress) !== true) {
+    msg.say(`The provided deposit address \`${depositAddress}\` is invalid.`)
+    return
+  }
+  if (assetAmount <= 0) {
+    msg.say(`The provided amount to send \`${assetAmount}\` is invalid.`)
+  }
 
-  msg.say('So you want to make a transaction...')
-    .say(`text: \`${text}\``)
-    .say(`match: \`${match}\``)
-    .say(`args: \`${args}\``)
-    .say(`depositAddress: \`${depositAddress}\`, assetBalance: \`${assetBalance}\`, assetName: \`${assetName}\``)
+  // Act
+  var url = Profiles.Blockchains.CityOfZionTestNet;
+  var fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
+  Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
+    .then((res) => {
+      console.log('doSendAsset response:', res);
+      if(res.result) {
+        msg.say('Transaction succeed.')
+      } else {
+        msg.say('Transaction seens to have been rejected.')
+      }
+    })
+    .catch((err) => {
+      console.log('doSendAsset error:', err);
+      msg.say('There is an error while executing the transaction.')
+    })
 })
 
 /**

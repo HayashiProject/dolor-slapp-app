@@ -22,11 +22,11 @@
 
 const express = require('express')
 const Utils = require('./utils/utils')
-const Profiles = require('./utils/profiles')
+const Profiles = require('./helpers/profiles')
 
 // -- Arrange
 
-const VERSION = 'dolor-23'
+const VERSION = 'dolor-22'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:

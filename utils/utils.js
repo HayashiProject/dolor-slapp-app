@@ -1,4 +1,3 @@
-
 const Utils = {
   // Libraries
   Neon: require('neon-js'),

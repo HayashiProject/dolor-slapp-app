@@ -1,6 +1,6 @@
 {
   "name": "neo-testnet-slapp-app",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Slack bot uses library and interacts with NEO Testnet blockchain.",
   "scripts": {
     "watch": "nodemon server.js",

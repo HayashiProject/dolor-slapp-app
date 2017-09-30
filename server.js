@@ -20,6 +20,7 @@
 const fs = require('fs')
 const express = require('express')
 const SlappHelper = require('./utils/slapp-helper')
+const NeoHelper = require('./utils/neo-helper')
 const Profiles = require('./utils/profiles')
 const Neon = require('neon-js')
 

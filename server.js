@@ -17,7 +17,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-18'
+const VERSION = 'dolor-19'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -99,6 +99,8 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
   console.log('argsB:', argsB)
   let argsC = match.split(' +')
   console.log('argsC:', argsC)
+  let argsD = match.split(/\s+/)
+  console.log('argsD:', argsD)
 
   msg.say('So you want to make a transaction...')
     .say(`text: \`${text}\``)

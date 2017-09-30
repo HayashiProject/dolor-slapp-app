@@ -27,7 +27,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-20'
+const VERSION = 'dolor-23'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:

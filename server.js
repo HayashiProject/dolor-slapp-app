@@ -21,13 +21,12 @@
 'use strict'
 
 const express = require('express')
-const SlappHelper = require('./helpers/slapp-helper')
+const Utils = require('./utils/utils')
 const Profiles = require('./helpers/profiles')
-const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-20'
+const VERSION = 'dolor-21'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -41,8 +40,8 @@ Examples:
   \`send AVUfegS354LWRoBuCzuKjGCYkT3tnpFFTD 10 Neo\`
   \`send AVUfegS354LWRoBuCzuKjGCYkT3tnpFFTD 7.6 Gas\`
 `
-let port = SlappHelper.GetPort()
-let slapp = SlappHelper.CreateSlapp()
+let port = Utils.SlappHelper.GetPort()
+let slapp = Utils.SlappHelper.CreateSlapp()
 
 
 
@@ -80,10 +79,7 @@ slapp.command(COMMAND_HANDLER, 'help', (msg) => {
 })
 
 slapp.command(COMMAND_HANDLER, 'height', (msg) => {
-  // msg.say('So you want to find out the height of the blockchain...')
-  //   .say("Let's see (not implemened).")
-  console.log(Neon)
-  Neon.getWalletDBHeight(Profiles.Blockchains.CityOfZionTestNet)
+  Utils.Neon.getWalletDBHeight(Profiles.Blockchains.CityOfZionTestNet)
     .then(function(height) {
       msg.say(`Block height: \`${height}\``)
     })
@@ -92,7 +88,7 @@ slapp.command(COMMAND_HANDLER, 'height', (msg) => {
 slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
   let blockchain = Profiles.Blockchains.CityOfZionTestNet;
   let address = Profiles.Wallets.WalletPiccolo.Address;
-  Neon.getBalance(blockchain, address)
+  Utils.Neon.getBalance(blockchain, address)
     .then(function(balanceObj) {
       msg.say(`Address: \`${address}\` Balance: \`${balanceObj.Neo.toString()} NEO\` and \`${balanceObj.Gas.toString()} GAS\` `)
     })
@@ -117,7 +113,7 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
   // Act
   var url = Profiles.Blockchains.CityOfZionTestNet;
   var fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
-  Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
+  Utils.Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
     .then((res) => {
       console.log('doSendAsset response:', res);
       if(res.result) {

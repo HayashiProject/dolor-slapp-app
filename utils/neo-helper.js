@@ -1,7 +1,7 @@
 const NeoHelper = {
-  IsValidAddress: function (address) {
-    return /^([a-zA-Z0-9]){34}$/.test(address)
-  },
-}
+    IsValidAddress: function () {
+        return true
+    },
+};
 
-module.exports = SlappHelper
+module.exports = SlappHelper;

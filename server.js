@@ -44,6 +44,14 @@ slapp.command(COMMAND_HANDLER, 'version', (msg) => {
   msg.say(`Version \`${VERSION}\``)
 })
 
+slapp.command(COMMAND_HANDLER, 'multisay', (msg) => {
+  msg.say('I say 1 line.')
+  msg.say('I say another.')
+  setTimeout(() => {
+    msg.say('I say something else after 2sec.')
+  }, 2000)
+})
+
 slapp.command(COMMAND_HANDLER, 'random', (msg) => {
   /**
    * msg.response() doesn't take array as it will just response with entire array.
@@ -82,9 +90,15 @@ slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
 
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
   let args = match.split("\\s+")
+  console.log('args:', args)
   let depositAddress = args[0]
   let assetBalance = parseFloat(args[1])
   let assetName = args[2]
+
+  let argsB = match.split(' ')
+  console.log('argsB:', argsB)
+  let argsC = match.split(' +')
+  console.log('argsC:', argsC)
 
   msg.say('So you want to make a transaction...')
     .say(`text: \`${text}\``)

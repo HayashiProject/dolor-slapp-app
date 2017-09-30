@@ -17,7 +17,7 @@
  */
 'use strict'
 
-const fs = require('fs')
+// const fs = require('fs')
 const express = require('express')
 const SlappHelper = require('./utils/slapp-helper')
 const NeoHelper = require('./utils/neo-helper')
@@ -26,8 +26,8 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-// const VERSION = 'dolor-26'
-const VERSION = JSON.parse(fs.readFileSync('./package.json')).version
+const VERSION = 'dolor-28'
+// const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase building time a lot.
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:

@@ -4,9 +4,19 @@
  * TODO:
  * - Better cater imprecise command input (additional space, case sensitivity, alternate command etc)
  * - Diagnose neon-js health
- * - Transfer balance with "send [address] [neo amount] [gas amount]"
  * - Check TX status
  * - Load bot version value from package.json
+ * 
+ * MORE TODO:
+ * - Redo README.md
+ * - Review bot.yml
+ * - Formalise this project/bot name
+ * - Formalise avatar image
+ * - Uniform coding style/format
+ * 
+ * QUESTIONS FOR COMMUNITY:
+ * - Is it preferrable to use command or use mention?
+ * - Is it possible to lock down to 1 channel only, a workaround for ACL to prevent abuse
  */
 'use strict'
 

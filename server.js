@@ -21,13 +21,13 @@
 'use strict'
 
 const express = require('express')
-const SlappHelper = require('./helpers/slapp-helper')
-const Profiles = require('./helpers/profiles')
+const SlappHelper = require('./utils/slapp-helper')
+const Profiles = require('./utils/profiles')
 const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-23'
+const VERSION = 'dolor-24'
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:

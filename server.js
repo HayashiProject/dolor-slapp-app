@@ -26,7 +26,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.0.30'
+const VERSION = '1.0.32'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
@@ -93,9 +93,10 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
   assetName = NeoHelper.SanitizeAssetName(assetName)
   if (!assetName) {
     msg.say(`The provided asset name is invalid.`)
+    return
   }
-  if (assetAmount <= 0) {
-    msg.say(`The provided amount to send \`${assetAmount}\` is invalid.`)
+  if (!NeoHelper.IsValidAmount(assetName, assetAmount)) {
+    msg.say(`The provided amount is invalid.`)
     return
   }
 
@@ -119,17 +120,17 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
 
 
 
-
 //*********************************************
 // Education Purpose
 //*********************************************
 
 /**
- * Experiment on capture non-registered command
+ * Experiment on capture non-registered command.
+ * This is expected to fail.
  */
-slapp.command('/dolor2', 'hi', (msg) => {
-  msg.say('Umm... Hi. You not suppose to find me.')
-})
+// slapp.command('/dolor2', 'hi', (msg) => {
+//   msg.say('Umm... Hi. You not suppose to find me.')
+// })
 
 /**
  * Sample code snippet response
@@ -158,8 +159,10 @@ slapp.command(COMMAND_HANDLER, 'idme', (msg) => {
  * Console log this/slapp object
  */
 slapp.command(COMMAND_HANDLER, 'debugthis', (msg) => {
-  console.log('this:', this)
-  console.log('slapp:', slapp)
+  // console.log('this:', this)
+  // console.log('slapp:', slapp)
+  console.log('slapp.client.bots.info():', slapp.client.bots.info())
+  console.log('slapp.client.channels.info():', slapp.client.channels.info())
 })
 
 /**
@@ -183,10 +186,6 @@ slapp.command(COMMAND_HANDLER, 'multisay', (msg) => {
  * Note that the syntax it'll only work with msg.say(), not msg.response()
  */
 slapp.command(COMMAND_HANDLER, 'random', (msg) => {
-  /**
-   * msg.response() doesn't take array as it will just response with entire array.
-   * Have to use msg.say() for random sentence usage.
-   */
   msg.say([
     "Be happy :smile:",
     'You the best',
@@ -198,9 +197,12 @@ slapp.command(COMMAND_HANDLER, 'random', (msg) => {
 /**
  * Example whisper usage
  */
+// slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
+//   msg.say('I am saying something here...')
+//   msg.response('... but only the requestee will hear my whisper')
+// })
 slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
-  msg.say('I am saying something here...')
-  msg.response('... but only the requestee will hear my whisper')
+  msg.response('Dont forget umbrella.')
 })
 
 

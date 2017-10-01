@@ -1,5 +1,6 @@
-const NeoHelper = {
+const MathHelper = require('./math-helper')
 
+const NeoHelper = {
   /**
    * Check if the address matches typical NEO wallet address syntax
    */
@@ -24,6 +25,14 @@ const NeoHelper = {
     }
   },
   
+  IsValidAmount: function (assetName, amount) {
+    if (amount <= 0) {
+      return false
+    } else if (assetName === 'Neo' && !MathHelper.IsInt(amount)) {
+      return false
+    }
+    return true
+  },
 }
 
 module.exports = NeoHelper

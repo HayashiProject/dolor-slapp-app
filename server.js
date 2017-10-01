@@ -9,6 +9,7 @@
  * MORE TODO:
  * - Formalise this project/bot name
  * - Formalise avatar image
+ * - Channel restriction
  * 
  * QUESTIONS FOR COMMUNITY:
  * - Is it preferrable to use command or use mention?
@@ -25,7 +26,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.0.29'
+const VERSION = '1.0.30'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
@@ -79,16 +80,20 @@ slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
 slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
   let args = match.trim().split(/\s+/)
   console.log('args:', args)
+  msg.say(`User input: \`${text}\``)
   let depositAddress = args[0]
   let assetAmount = parseFloat(args[1])
   let assetName = args[2]
 
   // Validation and sanitization
-  if (/^([a-zA-Z0-9]){34}$/.test(depositAddress) !== true) {
-    msg.say(`The provided deposit address \`${depositAddress}\` is invalid.`)
+  if (!NeoHelper.IsValidAddress(depositAddress)) {
+    msg.say(`The provided deposit address is invalid.`)
     return
   }
-
+  assetName = NeoHelper.SanitizeAssetName(assetName)
+  if (!assetName) {
+    msg.say(`The provided asset name is invalid.`)
+  }
   if (assetAmount <= 0) {
     msg.say(`The provided amount to send \`${assetAmount}\` is invalid.`)
     return
@@ -120,6 +125,44 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
 //*********************************************
 
 /**
+ * Experiment on capture non-registered command
+ */
+slapp.command('/dolor2', 'hi', (msg) => {
+  msg.say('Umm... Hi. You not suppose to find me.')
+})
+
+/**
+ * Sample code snippet response
+ */
+slapp.command(COMMAND_HANDLER, 'codesnippet', (msg) => {
+  const text = `
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./firebase-messaging-sw.js').then(function(registration) {
+    console.log('Firebase Worker Registered');
+  }).catch(function(err) {
+    console.log('Service Worker registration failed: ', err);
+  });
+}
+`
+  msg.say('```' + text + '```')
+})
+
+/**
+ * Identify the user and channel that made the command request
+ */
+slapp.command(COMMAND_HANDLER, 'idme', (msg) => {
+  //TODO
+})
+
+/**
+ * Console log this/slapp object
+ */
+slapp.command(COMMAND_HANDLER, 'debugthis', (msg) => {
+  console.log('this:', this)
+  console.log('slapp:', slapp)
+})
+
+/**
  * Make multiple msg.say() executions, even with condition break.
  */
 slapp.command(COMMAND_HANDLER, 'multisay', (msg) => {
@@ -134,7 +177,6 @@ slapp.command(COMMAND_HANDLER, 'multisay', (msg) => {
     msg.say('I say something 2 seconds later.')
   }, 2000)
 })
-
 
 /**
  * Say random phases.
@@ -152,6 +194,20 @@ slapp.command(COMMAND_HANDLER, 'random', (msg) => {
     'Anytime :sun_with_face: is good time :full_moon_with_face:'
   ])
 })
+
+/**
+ * Example whisper usage
+ */
+slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
+  msg.say('I am saying something here...')
+  msg.response('... but only the requestee will hear my whisper')
+})
+
+
+
+//*********************************************
+// The Catch Alls
+//*********************************************
 
 /**
  * Catch all commands
@@ -174,17 +230,6 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 //*********************************************
 // Legacy
 //*********************************************
-
-// slapp.command(COMMAND_HANDLER, 'whisper', (msg) => {
-//   /**
-//    * msg.response() will create response that's only visible to the requestee.
-//    */
-//   /**
-//    * msg.response() doesn't take array as it will just response with entire array.
-//    * Have to use msg.say() for random sentence usage.
-//    */
-//   msg.response('Dont forget umbrella.')
-// })
 
 // slapp.command(COMMAND_HANDLER, /^get/, (msg, text, match, arg4) => {
 //   console.log('text:', text)
@@ -227,14 +272,6 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 
 // slapp.command('/dolor', 'create (.*)', (msg, text, question) => {
 //   msg.response(`You said create something: [${text}]. question: [${question}]`)
-// })
-
-// slapp.command('/dolor', '(.*)', (msg) => {
-//   msg.response('I know you are saying something, but Im not sure what to do...')
-// })
-
-// slapp.message('foobar', ['mention', 'direct_message'], (msg) => {
-//   msg.say('FOOBAR! FOO BAR!!')
 // })
 
 // // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey

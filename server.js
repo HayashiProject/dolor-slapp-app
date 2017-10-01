@@ -26,7 +26,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.0.33'
+const VERSION = '1.0.34'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
@@ -164,7 +164,7 @@ slapp.command(COMMAND_HANDLER, 'debugthis', (msg) => {
   // console.log('slapp.client.bots.info():', slapp.client.bots.info())
   // console.log('slapp.client.channels.info():', slapp.client.channels.info())
   console.log('msg.body:', msg.body)
-  msg.say('```' + msg.body + '```')
+  msg.say(`We are in ${msg.body.team_domain}. This message is requested by @${msg.body.user_name} in #${msg.body.channel_name}.`)
 })
 
 /**

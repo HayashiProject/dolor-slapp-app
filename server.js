@@ -5,7 +5,6 @@
  * - Better cater imprecise command input (additional space, case sensitivity, alternate command etc)
  * - Diagnose neon-js health
  * - Check TX status
- * - Load bot version value from package.json
  * 
  * MORE TODO:
  * - Formalise this project/bot name
@@ -26,8 +25,8 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = 'dolor-28'
-// const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase building time a lot.
+const VERSION = '1.0.29'
+// const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -52,27 +51,6 @@ let slapp = SlappHelper.CreateSlapp()
 
 slapp.command(COMMAND_HANDLER, 'version', (msg) => {
   msg.say(`Version \`${VERSION}\``)
-})
-
-slapp.command(COMMAND_HANDLER, 'multisay', (msg) => {
-  msg.say('I say 1 line.')
-  msg.say('I say another.')
-  setTimeout(() => {
-    msg.say('I say something else after 2sec.')
-  }, 2000)
-})
-
-slapp.command(COMMAND_HANDLER, 'random', (msg) => {
-  /**
-   * msg.response() doesn't take array as it will just response with entire array.
-   * Have to use msg.say() for random sentence usage.
-   */
-  msg.say([
-    "Be happy :smile:",
-    'You the best',
-    ':+1: go on!',
-    'Anytime :sun_with_face: is good time :full_moon_with_face:'
-  ])
 })
 
 slapp.command(COMMAND_HANDLER, 'help', (msg) => {
@@ -110,8 +88,10 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
     msg.say(`The provided deposit address \`${depositAddress}\` is invalid.`)
     return
   }
+
   if (assetAmount <= 0) {
     msg.say(`The provided amount to send \`${assetAmount}\` is invalid.`)
+    return
   }
 
   // Act
@@ -132,8 +112,49 @@ slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
     })
 })
 
+
+
+
+//*********************************************
+// Education Purpose
+//*********************************************
+
 /**
- * Catch all command
+ * Make multiple msg.say() executions, even with condition break.
+ */
+slapp.command(COMMAND_HANDLER, 'multisay', (msg) => {
+  if(Math.random() < 0.2) {
+    msg.say('The RNG has spoken, there shall be cake.')
+    return
+  }
+
+  msg.say('I say one line.')
+  msg.say('I say another.')
+  setTimeout(() => {
+    msg.say('I say something 2 seconds later.')
+  }, 2000)
+})
+
+
+/**
+ * Say random phases.
+ * Note that the syntax it'll only work with msg.say(), not msg.response()
+ */
+slapp.command(COMMAND_HANDLER, 'random', (msg) => {
+  /**
+   * msg.response() doesn't take array as it will just response with entire array.
+   * Have to use msg.say() for random sentence usage.
+   */
+  msg.say([
+    "Be happy :smile:",
+    'You the best',
+    ':+1: go on!',
+    'Anytime :sun_with_face: is good time :full_moon_with_face:'
+  ])
+})
+
+/**
+ * Catch all commands
  */
 slapp.command(COMMAND_HANDLER, '(.*)', (msg, text, match) => {
   // console.log('text:', text)
@@ -142,7 +163,7 @@ slapp.command(COMMAND_HANDLER, '(.*)', (msg, text, match) => {
 })
 
 /**
- * Catch all message
+ * Catch all mentioned and DM
  */
 slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
   msg.say(`Don't message me directly. Use \`/dolor help\` to see list of available commands.`)

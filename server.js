@@ -26,7 +26,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.0.34'
+const VERSION = '1.0.35'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
@@ -152,19 +152,8 @@ if ('serviceWorker' in navigator) {
  * Identify the user and channel that made the command request
  */
 slapp.command(COMMAND_HANDLER, 'idme', (msg) => {
-  //TODO
-})
-
-/**
- * Console log this/slapp object
- */
-slapp.command(COMMAND_HANDLER, 'debugthis', (msg) => {
-  // console.log('this:', this)
-  // console.log('slapp:', slapp)
-  // console.log('slapp.client.bots.info():', slapp.client.bots.info())
-  // console.log('slapp.client.channels.info():', slapp.client.channels.info())
-  console.log('msg.body:', msg.body)
-  msg.say(`We are in ${msg.body.team_domain}. This message is requested by @${msg.body.user_name} in #${msg.body.channel_name}.`)
+  // console.log('msg.body:', msg.body)
+  msg.say(`We are in \`${msg.body.team_domain}\` (\`${msg.body.team_id}\`). This message is requested by \`@${msg.body.user_name}\` (\`${msg.body.user_id}\`) in \`#${msg.body.channel_name}\` (\`${msg.body.channel_id}\`).`)
 })
 
 /**

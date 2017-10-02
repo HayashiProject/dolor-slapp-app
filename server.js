@@ -134,6 +134,12 @@ function msg_send(msg, args) {
     })
 }
 
+function msg_idme (msg) {
+  console.log('msg_idme triggered.')
+  console.log('msg.body:', msg.body)
+  msg.say(`We are in \`${msg.body.team_domain}\` (\`${msg.body.team_id}\`). This message is requested by \`@${msg.body.user_name}\` (\`${msg.body.user_id}\`) in \`#${msg.body.channel_name}\` (\`${msg.body.channel_id}\`).`)  
+}
+
 slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
   // Validate application-level permission
   if (WHITELIST_CHANNELS.length > 0 && (WHITELIST_CHANNELS.indexOf(msg.body.channel_name) === -1)) { // Pass, if whitelist is empty
@@ -161,6 +167,8 @@ slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
     msg_wallet(msg)
   } else if (cmd === 'send') {
     msg_send(msg, args)
+  } else if (cmd === 'idme') {
+    msg_idme(msg)
   }
 })
 

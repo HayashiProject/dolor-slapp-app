@@ -27,7 +27,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.1.4'
+const VERSION = '1.1.5'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 // const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
@@ -53,24 +53,34 @@ let slapp = SlappHelper.CreateSlapp()
 //*********************************************
 
 function msg_version(msg) {
-  msg.say(`DolorSay(2) version \`${VERSION}\``)
+  msg.say(`DolorSay version \`${VERSION}\``)
 }
 
-// slapp.message(`${CMD_MSG_HANDLER} version`, (msg) => {
-//   msg.say(`DolorSay version \`${VERSION}\``)
-// })
+function msg_help(msg) {
+  msg.say(HELP_TEXT)
+}
 
-// slapp.message(`${CMD_MSG_HANDLER} status`, (msg) => {
-//   msg.say(`Status message (TBA)`)
-// })
+function msg_height(msg) {
+  Neon.getWalletDBHeight(Profiles.Blockchains.CityOfZionTestNet)
+    .then(function(height) {
+      msg.say(`Block height: \`${height}\``)
+    })
+}
+
+function msg_wallet(msg) {
+  Neon.getBalance(Profiles.Blockchains.CityOfZionTestNet, Profiles.Wallets.WalletPiccolo.Address)
+    .then(function(balanceObj) {
+      msg.say(`Bot wallet: \`${address}\` Balance: \`${balanceObj.Neo.toString()} NEO\` and \`${balanceObj.Gas.toString()} GAS\` `)
+    })
+}
 
 slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
-  msg.say(`text: \`${text}\``)
-  msg.say(`match: \`${match}\``)
+  // msg.say(`text: \`${text}\``)
+  // msg.say(`match: \`${match}\``)
   
   let args = match.trim().split(/\s+/)
   // console.log('args:', args)
-  msg.say(`args: \`${args}\``)
+  // msg.say(`args: \`${args}\``)
 
   if(!args || args.length === 0) {
     return
@@ -78,11 +88,17 @@ slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
 
   let cmd = args[0]
   args.shift();
-  msg.say(`cmd: \`${cmd}\``)
-  msg.say(`args(2): \`${args}\``)
+  // msg.say(`cmd: \`${cmd}\``)
+  // msg.say(`args(2): \`${args}\``)
 
-  if(cmd === 'version') {
+  if (cmd === 'version') {
     msg_version(msg)
+  } else if (cmd === 'help') {
+    msg_help(msg)
+  } else if (cmd === 'height') {
+    msg_height(msg)
+  } else if (cmd === 'wallet') {
+    msg_wallet(msg)
   }
   
 })

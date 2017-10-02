@@ -27,7 +27,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.1.13'
+const VERSION = '1.1.14'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 // const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
@@ -116,13 +116,18 @@ function msg_send(msg, args) {
       console.log('Neon.doSendAsset() completed. response:', res);
       if(res.result) {
         msg.say('Transaction succeeded.')
-        //
-        // return Utils.neon.getTransactionHistory(blockchain, address)
+        return Utils.neon.getTransactionHistory(url, address)
       } else {
         msg.say('Transaction appears to be rejected.')
       }
     })
-    //then(...)
+    // then((transactions) => {
+    //   console.log('Neon.getTransactionHistory() completed. transactions.length:', transactions.length);
+    //   if(transactions.length > 0) {
+    //     let latestTransction = transactions[0]
+    //     //...
+    //   }
+    // })
     .catch((err) => {
       console.log('doSendAsset error:', err);
       msg.say('Transacton execution error.')

@@ -60,77 +60,89 @@ slapp.message(`${CMD_MSG_HANDLER} status`, (msg) => {
   msg.say(`Status message (TBA)`)
 })
 
+slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
+  msg.say(`text: \`${text}\``)
+  msg.say(`match: \`${match}\``)
+  
+  let args = match.trim().split(/\s+/)
+  console.log('args:', args)
+  msg.say(`args: \`${args}\``)
+
+})
+
+
+
 //*********************************************
 // Setup commands handlers
 //*********************************************
 
-slapp.command(COMMAND_HANDLER, 'version', (msg) => {
-  msg.say(`Version \`${VERSION}\``)
-})
+// slapp.command(COMMAND_HANDLER, 'version', (msg) => {
+//   msg.say(`Version \`${VERSION}\``)
+// })
 
-slapp.command(COMMAND_HANDLER, 'help', (msg) => {
-  msg.say(HELP_TEXT)
-})
+// slapp.command(COMMAND_HANDLER, 'help', (msg) => {
+//   msg.say(HELP_TEXT)
+// })
 
-slapp.command(COMMAND_HANDLER, 'height', (msg) => {
-  // msg.say('So you want to find out the height of the blockchain...')
-  //   .say("Let's see (not implemened).")
-  console.log(Neon)
-  Neon.getWalletDBHeight(Profiles.Blockchains.CityOfZionTestNet)
-    .then(function(height) {
-      msg.say(`Block height: \`${height}\``)
-    })
-})
+// slapp.command(COMMAND_HANDLER, 'height', (msg) => {
+//   // msg.say('So you want to find out the height of the blockchain...')
+//   //   .say("Let's see (not implemened).")
+//   console.log(Neon)
+//   Neon.getWalletDBHeight(Profiles.Blockchains.CityOfZionTestNet)
+//     .then(function(height) {
+//       msg.say(`Block height: \`${height}\``)
+//     })
+// })
 
-slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
-  let blockchain = Profiles.Blockchains.CityOfZionTestNet;
-  let address = Profiles.Wallets.WalletPiccolo.Address;
-  Neon.getBalance(blockchain, address)
-    .then(function(balanceObj) {
-      msg.say(`Address: \`${address}\` Balance: \`${balanceObj.Neo.toString()} NEO\` and \`${balanceObj.Gas.toString()} GAS\` `)
-    })
-})
+// slapp.command(COMMAND_HANDLER, 'wallet', (msg) => {
+//   let blockchain = Profiles.Blockchains.CityOfZionTestNet;
+//   let address = Profiles.Wallets.WalletPiccolo.Address;
+//   Neon.getBalance(blockchain, address)
+//     .then(function(balanceObj) {
+//       msg.say(`Address: \`${address}\` Balance: \`${balanceObj.Neo.toString()} NEO\` and \`${balanceObj.Gas.toString()} GAS\` `)
+//     })
+// })
 
-slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
-  let args = match.trim().split(/\s+/)
-  console.log('args:', args)
-  msg.say(`User input: \`${text}\``)
-  let depositAddress = args[0]
-  let assetAmount = parseFloat(args[1])
-  let assetName = args[2]
+// slapp.command(COMMAND_HANDLER, 'send (.*)', (msg, text, match) => {
+//   let args = match.trim().split(/\s+/)
+//   console.log('args:', args)
+//   msg.say(`User input: \`${text}\``)
+//   let depositAddress = args[0]
+//   let assetAmount = parseFloat(args[1])
+//   let assetName = args[2]
 
-  // Validation and sanitization
-  if (!NeoHelper.IsValidAddress(depositAddress)) {
-    msg.say(`The provided deposit address is invalid.`)
-    return
-  }
-  assetName = NeoHelper.SanitizeAssetName(assetName)
-  if (!assetName) {
-    msg.say(`The provided asset name is invalid.`)
-    return
-  }
-  if (!NeoHelper.IsValidAmount(assetName, assetAmount)) {
-    msg.say(`The provided amount is invalid.`)
-    return
-  }
+//   // Validation and sanitization
+//   if (!NeoHelper.IsValidAddress(depositAddress)) {
+//     msg.say(`The provided deposit address is invalid.`)
+//     return
+//   }
+//   assetName = NeoHelper.SanitizeAssetName(assetName)
+//   if (!assetName) {
+//     msg.say(`The provided asset name is invalid.`)
+//     return
+//   }
+//   if (!NeoHelper.IsValidAmount(assetName, assetAmount)) {
+//     msg.say(`The provided amount is invalid.`)
+//     return
+//   }
 
-  // Act
-  var url = Profiles.Blockchains.CityOfZionTestNet;
-  var fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
-  Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
-    .then((res) => {
-      console.log('doSendAsset response:', res);
-      if(res.result) {
-        msg.say('Transaction succeed.')
-      } else {
-        msg.say('Transaction seens to have been rejected.')
-      }
-    })
-    .catch((err) => {
-      console.log('doSendAsset error:', err);
-      msg.say('There is an error while executing the transaction.')
-    })
-})
+//   // Act
+//   var url = Profiles.Blockchains.CityOfZionTestNet;
+//   var fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
+//   Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
+//     .then((res) => {
+//       console.log('doSendAsset response:', res);
+//       if(res.result) {
+//         msg.say('Transaction succeed.')
+//       } else {
+//         msg.say('Transaction seens to have been rejected.')
+//       }
+//     })
+//     .catch((err) => {
+//       console.log('doSendAsset error:', err);
+//       msg.say('There is an error while executing the transaction.')
+//     })
+// })
 
 
 

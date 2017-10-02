@@ -27,11 +27,12 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.1.7'
+const VERSION = '1.1.12'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 // const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
 const CMD_MSG_HANDLER = 'dolor'
+const WHITELIST_CHANNELS = []
 const HELP_TEXT = `
 I will respond to the following commands:
 \`help\` - to see this message.
@@ -115,22 +116,22 @@ function msg_send(msg, args) {
 }
 
 slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
-  // msg.say(`text: \`${text}\``)
-  // msg.say(`match: \`${match}\``)
-  
-  let args = match.trim().split(/\s+/)
-  // console.log('args:', args)
-  // msg.say(`args: \`${args}\``)
+  // Validate application-level permission
+  if (WHITELIST_CHANNELS.length > 0 && (WHITELIST_CHANNELS.indexOf(msg.body.channel_name) === -1)) { // Pass, if whitelist is empty
+    console.log('Permission denied. team:', msg.body.team_domain, msg.body.team_id, 'channel:', msg.body.channel_name, msg.body.channel_id, 'user:', msg.body.user_name, msg.body.user_id)
+    return
+  }
 
+  // Validate input arguments
+  let args = match.trim().split(/\s+/)
   if(!args || args.length === 0) {
     return
   }
 
   let cmd = args[0]
   args.shift();
-  // msg.say(`cmd: \`${cmd}\``)
-  // msg.say(`args(2): \`${args}\``)
-
+  console.log('cmd:', cmd, 'args:', args)
+  
   if (cmd === 'version') {
     msg_version(msg)
   } else if (cmd === 'help') {
@@ -150,9 +151,9 @@ slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
 // Setup commands handlers
 //*********************************************
 
-// slapp.command(COMMAND_HANDLER, 'version', (msg) => {
-//   msg.say(`Version \`${VERSION}\``)
-// })
+slapp.command(COMMAND_HANDLER, 'version', (msg) => {
+  msg.say(`Version \`${VERSION}\``)
+})
 
 // slapp.command(COMMAND_HANDLER, 'help', (msg) => {
 //   msg.say(HELP_TEXT)

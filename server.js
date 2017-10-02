@@ -27,7 +27,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.1.12'
+const VERSION = '1.1.13'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 // const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
@@ -77,6 +77,7 @@ function msg_wallet(msg) {
 }
 
 function msg_send(msg, args) {
+  console.log('msg_sending triggered. args:', args)
   let depositAddress = args[0]
   let assetAmount = parseFloat(args[1])
   let assetName = args[2]
@@ -97,18 +98,31 @@ function msg_send(msg, args) {
   }
 
   // Act
-  var url = Profiles.Blockchains.CityOfZionTestNet;
-  var fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
+  let url = Profiles.Blockchains.CityOfZionTestNet;
+  let fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
+  let currentHeight = 0;
   msg.say(`Sending \`${assetAmount} ${assetName}\` to \`${depositAddress}\`...`)
-  Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
+
+  Promise.resolve()
+    .then(() => {
+      return Neon.getWalletDBHeight(url)
+    })
+    .then((height) => {
+      console.log('Neon.getWalletDBHeight() complete. height: ', height)
+      currentHeight = height;
+      return Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
+    })
     .then((res) => {
-      console.log('doSendAsset response:', res);
+      console.log('Neon.doSendAsset() completed. response:', res);
       if(res.result) {
         msg.say('Transaction succeeded.')
+        //
+        // return Utils.neon.getTransactionHistory(blockchain, address)
       } else {
         msg.say('Transaction appears to be rejected.')
       }
     })
+    //then(...)
     .catch((err) => {
       console.log('doSendAsset error:', err);
       msg.say('Transacton execution error.')

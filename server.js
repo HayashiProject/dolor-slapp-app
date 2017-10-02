@@ -23,11 +23,13 @@ const SlappHelper = require('./utils/slapp-helper')
 const NeoHelper = require('./utils/neo-helper')
 const Profiles = require('./utils/profiles')
 const Neon = require('neon-js')
+const packageData = require('./package.json')
 
 // -- Arrange
 
-const VERSION = '1.0.35'
+// const VERSION = '1.1.0'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
+const VERSION = packageData.version
 const COMMAND_HANDLER = '/dolor'
 const HELP_TEXT = `
 I will respond to the following commands:
@@ -45,6 +47,17 @@ let port = SlappHelper.GetPort()
 let slapp = SlappHelper.CreateSlapp()
 
 
+//*********************************************
+// Setup message handlers
+//*********************************************
+
+slapp.message(`${COMMAND_HANDLER} version`, (msg) => {
+  msg.say(`DolorSay version \`${VERSION}\``)
+})
+
+slapp.message(`${COMMAND_HANDLER} status`, (msg) => {
+  msg.say(`Status message (TBA)`)
+})
 
 //*********************************************
 // Setup commands handlers

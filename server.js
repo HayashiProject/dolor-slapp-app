@@ -27,7 +27,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.1.5'
+const VERSION = '1.1.7'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 // const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
@@ -36,7 +36,6 @@ const HELP_TEXT = `
 I will respond to the following commands:
 \`help\` - to see this message.
 \`version\` - to see version of this Slack bot.
-\`random\` - to output a random sentence, for fun.
 \`height\` - to output current blockchain height.
 \`wallet\` - to output this bot's wallet information.
 \`send <address> <quantity> <asset-name>\` - to make a transfer from bot's account. 'asset name' can be either 'Neo' or 'Gas', case sensitive.
@@ -68,9 +67,50 @@ function msg_height(msg) {
 }
 
 function msg_wallet(msg) {
-  Neon.getBalance(Profiles.Blockchains.CityOfZionTestNet, Profiles.Wallets.WalletPiccolo.Address)
+  const url = Profiles.Blockchains.CityOfZionTestNet
+  const address = Profiles.Wallets.WalletPiccolo.Address
+  Neon.getBalance(url, address)
     .then(function(balanceObj) {
       msg.say(`Bot wallet: \`${address}\` Balance: \`${balanceObj.Neo.toString()} NEO\` and \`${balanceObj.Gas.toString()} GAS\` `)
+    })
+}
+
+function msg_send(msg, args) {
+  let depositAddress = args[0]
+  let assetAmount = parseFloat(args[1])
+  let assetName = args[2]
+
+  // Validation and sanitization
+  if (!NeoHelper.IsValidAddress(depositAddress)) {
+    msg.say(`The provided deposit address is invalid.`)
+    return
+  }
+  assetName = NeoHelper.SanitizeAssetName(assetName)
+  if (!assetName) {
+    msg.say(`The provided asset name is invalid.`)
+    return
+  }
+  if (!NeoHelper.IsValidAmount(assetName, assetAmount)) {
+    msg.say(`The provided amount is invalid.`)
+    return
+  }
+
+  // Act
+  var url = Profiles.Blockchains.CityOfZionTestNet;
+  var fromSecret = Profiles.Wallets.WalletPiccolo.Secret;
+  msg.say(`Sending \`${assetAmount} ${assetName}\` to \`${depositAddress}\`...`)
+  Neon.doSendAsset(url, depositAddress, fromSecret, assetName, assetAmount)
+    .then((res) => {
+      console.log('doSendAsset response:', res);
+      if(res.result) {
+        msg.say('Transaction succeeded.')
+      } else {
+        msg.say('Transaction appears to be rejected.')
+      }
+    })
+    .catch((err) => {
+      console.log('doSendAsset error:', err);
+      msg.say('Transacton execution error.')
     })
 }
 
@@ -99,8 +139,9 @@ slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
     msg_height(msg)
   } else if (cmd === 'wallet') {
     msg_wallet(msg)
+  } else if (cmd === 'send') {
+    msg_send(msg, args)
   }
-  
 })
 
 

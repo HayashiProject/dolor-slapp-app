@@ -27,7 +27,7 @@ const Neon = require('neon-js')
 
 // -- Arrange
 
-const VERSION = '1.1.14'
+const VERSION = '1.1.15'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
 // const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
@@ -137,7 +137,8 @@ function msg_send(msg, args) {
 function msg_idme (msg) {
   console.log('msg_idme triggered.')
   console.log('msg.body:', msg.body)
-  msg.say(`We are in \`${msg.body.team_domain}\` (\`${msg.body.team_id}\`). This message is requested by \`@${msg.body.user_name}\` (\`${msg.body.user_id}\`) in \`#${msg.body.channel_name}\` (\`${msg.body.channel_id}\`).`)  
+  // msg.say(`We are in \`${msg.body.team_domain}\` (\`${msg.body.team_id}\`). This message is requested by \`@${msg.body.user_name}\` (\`${msg.body.user_id}\`) in \`#${msg.body.channel_name}\` (\`${msg.body.channel_id}\`).`)  
+  msg.say(`We are in \`${msg.body.team_id}\`. This message is requested by user \`${msg.body.user}\` in channel \`${msg.body.channel}\`.`)  
 }
 
 slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {

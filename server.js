@@ -23,13 +23,13 @@ const SlappHelper = require('./utils/slapp-helper')
 const NeoHelper = require('./utils/neo-helper')
 const Profiles = require('./utils/profiles')
 const Neon = require('neon-js')
-const packageData = require('./package.json')
+// const packageData = require('./package.json')
 
 // -- Arrange
 
-// const VERSION = '1.1.0'
+const VERSION = '1.1.4'
 // const VERSION = JSON.parse(fs.readFileSync('./package.json')).version // NOTE: fs usage seems to increase Beep Boop building time a lot.
-const VERSION = packageData.version
+// const VERSION = packageData.version// NOTE: this still increase Beep Boop building time
 const COMMAND_HANDLER = '/dolor'
 const CMD_MSG_HANDLER = 'dolor'
 const HELP_TEXT = `
@@ -52,22 +52,39 @@ let slapp = SlappHelper.CreateSlapp()
 // Setup message handlers
 //*********************************************
 
-slapp.message(`${CMD_MSG_HANDLER} version`, (msg) => {
-  msg.say(`DolorSay version \`${VERSION}\``)
-})
+function msg_version(msg) {
+  msg.say(`DolorSay(2) version \`${VERSION}\``)
+}
 
-slapp.message(`${CMD_MSG_HANDLER} status`, (msg) => {
-  msg.say(`Status message (TBA)`)
-})
+// slapp.message(`${CMD_MSG_HANDLER} version`, (msg) => {
+//   msg.say(`DolorSay version \`${VERSION}\``)
+// })
+
+// slapp.message(`${CMD_MSG_HANDLER} status`, (msg) => {
+//   msg.say(`Status message (TBA)`)
+// })
 
 slapp.message(`${CMD_MSG_HANDLER} (.*)`, (msg, text, match) => {
   msg.say(`text: \`${text}\``)
   msg.say(`match: \`${match}\``)
   
   let args = match.trim().split(/\s+/)
-  console.log('args:', args)
+  // console.log('args:', args)
   msg.say(`args: \`${args}\``)
 
+  if(!args || args.length === 0) {
+    return
+  }
+
+  let cmd = args[0]
+  args.shift();
+  msg.say(`cmd: \`${cmd}\``)
+  msg.say(`args(2): \`${args}\``)
+
+  if(cmd === 'version') {
+    msg_version(msg)
+  }
+  
 })
 
 
